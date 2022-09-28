@@ -10,6 +10,8 @@ import bdet.rtree.Entrada;
 import bdet.rtree.Nodo;
 import bdet.rtree.RTree;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -18,10 +20,10 @@ import java.util.ArrayList;
 public class IncDistJoin {
 
     RTree r1, r2;
-    ArrayList<Estructura> resultado;
+    Map<Integer, ArrayList<Estructura>> resultado;
 
     public IncDistJoin(RTree r1, RTree r2) {
-        resultado = new ArrayList<>();
+        resultado = new HashMap<>();
         this.r1 = r1;
         this.r2 = r2;
 
@@ -33,13 +35,21 @@ public class IncDistJoin {
             if (elem.r1 instanceof Dato && elem.r2 instanceof Dato) {
                 float d = ((Dato) elem.r1).getLimites().distancia(((Dato) elem.r2).getLimites());
                 if (q.isEmpty() || d <= q.front().d) {
-                    int i = 0;
-                    for (i = 0; i < resultado.size(); i++){
-                        if (elem.d < resultado.get(i).d) {
-                            break;
+                    if (resultado.containsKey(((Dato) elem.r1).getOid())) {
+                        ArrayList<Estructura> resParcial = resultado.get(((Dato) elem.r1).getOid());
+                        int i;
+                        for (i = 0; i < resParcial.size(); i++) {
+                            if (elem.d < resParcial.get(i).d) {
+                                break;
+                            }
                         }
+                        resParcial.add(i, elem);
+                    } else {
+                        ArrayList<Estructura> resIndividual = new ArrayList<>();
+                        resIndividual.add(elem);
+                        resultado.put(((Dato) elem.r1).getOid(), resIndividual);
                     }
-                    resultado.add(i,elem);
+
                 } else {
                     elem.d = d;
                     q.enQueue(elem);
@@ -72,7 +82,7 @@ public class IncDistJoin {
         }
     }
 
-    public ArrayList<Estructura> getResultado() {
+    public Map<Integer, ArrayList<Estructura>> getResultado() {
         return resultado;
     }
 
