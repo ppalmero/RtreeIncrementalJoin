@@ -55,6 +55,8 @@ public class IncDistJoin {
                     q.enQueue(elem);
                 }
             } else if (elem.r1 instanceof Nodo) {
+                
+                
                 procesarNodo1(q, elem);
             } else {
                 procesarNodo2(q, elem);

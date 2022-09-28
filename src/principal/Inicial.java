@@ -64,7 +64,9 @@ public class Inicial {
         long inicio = System.currentTimeMillis();
 
         Map<Integer, ArrayList<Estructura>> vecinos = new IncDistJoin(rtreeC, rtreeA).getResultado();
-
+ 
+        
+        
         for (int comedero : vecinos.keySet()) {
             for (Estructura e : vecinos.get(comedero)) {
                 System.out.println(((Dato) e.r1).getOid() + " - " + ((Dato) e.r2).getOid() + " - Distancia: " + e.d);
